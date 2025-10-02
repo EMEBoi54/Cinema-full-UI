@@ -612,87 +612,53 @@
     </div>
 
     <script>
-        let currentRole = 'teller';
+  let currentRole = 'teller';
 
-        // Tab switching
-        const tabs = document.querySelectorAll('.tab');
-        const signInBtn = document.getElementById('signInBtn');
+  // Tabs
+  const tabs = document.querySelectorAll('.tab');
+  const signInBtn = document.getElementById('signInBtn');
 
-        tabs.forEach(tab => {
-            tab.addEventListener('click', function() {
-                tabs.forEach(t => t.classList.remove('active'));
-                this.classList.add('active');
-                
-                currentRole = this.dataset.role;
-                
-                if (currentRole === 'admin') {
-                    signInBtn.textContent = 'Sign In as Admin';
-                } else {
-                    signInBtn.textContent = 'Sign In as Teller';
-                }
-            });
-        });
-
-        // Login form submission
-        const loginForm = document.getElementById('loginForm');
-        const loginPage = document.getElementById('loginPage');
-        const dashboardPage = document.getElementById('dashboardPage');
-
-       loginForm.addEventListener('submit', function(e) {
-    e.preventDefault();
-    
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
-    
-    // Simple validation (you can add more sophisticated validation)
-    if (username && password) {
-        if (currentRole === 'admin') {
-            // Show dashboard for admin
-            loginPage.style.display = 'none';
-            dashboardPage.classList.add('active');
-        } else {
-            // Teller: show teller booking page instead of alert
-            loginPage.style.display = 'none';
-            bookingPage.style.display = 'block'; 
-            // 👆 bookingPage should be the <div id="bookingPage">…</div> 
-            // that contains your teller interface.
-            
-            // If your teller interface is in a separate file, use:
-            // window.location.href = "booking.html";
-        }
-    }
-});
-        // Password toggle
-        function togglePassword() {
-            const passwordInput = document.getElementById('password');
-            passwordInput.type = passwordInput.type === 'password' ? 'text' : 'password';
-        }
-
-        // Dashboard navigation
-        const navItems = document.querySelectorAll('.nav-item');
-        
-        navItems.forEach(item => {
-            item.addEventListener('click', function() {
-                navItems.forEach(i => i.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-       
-  // Prevent form submission and redirect instead
-  document.getElementById("loginForm").addEventListener("submit", function(e) {
-    e.preventDefault(); // stop the form from refreshing the page
-
-    // For Teller login, no validation needed — any input works
-    window.location.href = "tellerside.html"; 
-    // 👆 Replace "booking.html" with the actual filename of your booking page
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function () {
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+      currentRole = this.dataset.role;
+      signInBtn.textContent = currentRole === 'admin' ? 'Sign In as Admin' : 'Sign In as Teller';
+    });
   });
 
-  // Optional: toggle password visibility
+  // Login routing (single handler)
+  const loginForm = document.getElementById('loginForm');
+  const loginPage = document.getElementById('loginPage');
+  const dashboardPage = document.getElementById('dashboardPage');
+
+  loginForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
+
+    if (!username || !password) return;
+
+    if (currentRole === 'admin') {
+      // Admin -> show admin dashboard
+      loginPage.style.display = 'none';
+      dashboardPage.classList.add('active');
+    } else {
+      // Teller -> go to teller page
+      // If teller UI is a separate file:
+      window.location.href = 'tellerside.html';
+      // If teller UI is in the same file, use:
+      // loginPage.style.display = 'none';
+      // document.getElementById('bookingPage').style.display = 'block';
+    }
+  });
+
+  // Password toggle (single definition)
   function togglePassword() {
-    const pass = document.getElementById("password");
-    pass.type = pass.type === "password" ? "text" : "password";
+    const pass = document.getElementById('password');
+    pass.type = pass.type === 'password' ? 'text' : 'password';
   }
-    </script>
+</script>
 </body>
 </html>
