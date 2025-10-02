@@ -455,6 +455,25 @@
                 grid-template-columns: 1fr;
             }
         }
+
+   /* Make anchors inside nav items fill the item and inherit styles */
+.nav-item a {
+  display: block;
+  width: 100%;
+  height: 100%;
+  color: inherit;
+  text-decoration: none;
+}
+
+/* Ensure hover/active visuals still apply cleanly when using <a> */
+.nav-item:hover a {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.nav-item.active a {
+  background: #d32f2f;
+  color: #fff;
+}
     </style>
 </head>
 <body>
@@ -533,23 +552,26 @@
     </div>
 
     <!-- Dashboard Page -->
-    <div class="dashboard-page" id="dashboardPage">
-        <aside class="sidebar">
-            <div class="dashboard-logo">
-                <div class="dashboard-logo-icon"></div>
-                <div class="dashboard-logo-text">CinemaAdmin</div>
-            </div>
-            <ul class="nav-menu">
-                <li class="nav-item active">Dashboard</li>
-                <li class="nav-item">Teller Management</li>
-                <li class="nav-item">Movie Management</li>
-                <li class="nav-item">Activity Logs</li>
-                <li class="nav-item">System Logs</li>
-                <li class="nav-item">Sales Reports</li>
-                <li class="nav-item">Performance Reports</li>
-                <li class="nav-item">Settings</li>
-            </ul>
-        </aside>
+<aside class="sidebar">
+  <div class="dashboard-logo">
+    <div class="dashboard-logo-icon"></div>
+    <div class="dashboard-logo-text">CinemaAdmin</div>
+  </div>
+  <ul class="nav-menu">
+    <li class="nav-item active"><a href="dashboard.html">Dashboard</a></li>
+    <li class="nav-item"><a href="tellermanagement.html">Teller Management</a></li>
+    <li class="nav-item"><a href="moviemanagement.html">Movie Management</a></li>
+    <li class="nav-item"><a href="activitylogs.html">Activity Logs</a></li>
+    <li class="nav-item"><a href="systemlogs.html">System Logs</a></li>
+    <li class="nav-item"><a href="salesreport.html">Sales Reports</a></li>
+    <li class="nav-item"><a href="performance.html">Performance Reports</a></li>
+    <li class="nav-item"><a href="settings.html">Settings</a></li>
+  </ul>
+</aside>
+  <main class="main-content">
+    <!-- page content -->
+  </main>
+</div>
 
         <main class="main-content">
             <div class="header">
@@ -611,13 +633,14 @@
         </main>
     </div>
 
-    <script>
+  <script>
   let currentRole = 'teller';
 
-  // Tabs
   const tabs = document.querySelectorAll('.tab');
   const signInBtn = document.getElementById('signInBtn');
+  const loginForm = document.getElementById('loginForm');
 
+  // Switch tabs (Teller/Admin)
   tabs.forEach(tab => {
     tab.addEventListener('click', function () {
       tabs.forEach(t => t.classList.remove('active'));
@@ -627,12 +650,8 @@
     });
   });
 
-  // Login routing (single handler)
-  const loginForm = document.getElementById('loginForm');
-  const loginPage = document.getElementById('loginPage');
-  const dashboardPage = document.getElementById('dashboardPage');
-
-  loginForm.addEventListener('submit', function (e) {
+  // Handle login
+  loginForm.addEventListener('submit', function(e) {
     e.preventDefault();
 
     const username = document.getElementById('username').value;
@@ -641,20 +660,15 @@
     if (!username || !password) return;
 
     if (currentRole === 'admin') {
-      // Admin -> show admin dashboard
-      loginPage.style.display = 'none';
-      dashboardPage.classList.add('active');
-    } else {
-      // Teller -> go to teller page
-      // If teller UI is a separate file:
-      window.location.href = 'tellerside.html';
-      // If teller UI is in the same file, use:
-      // loginPage.style.display = 'none';
-      // document.getElementById('bookingPage').style.display = 'block';
+      // ✅ Redirect to admin dashboard page
+      window.location.href = "dashboard.html";
+    } else if (currentRole === 'teller') {
+      // ✅ Redirect to teller dashboard page
+      window.location.href = "tellerside.html";
     }
   });
 
-  // Password toggle (single definition)
+  // Toggle password visibility
   function togglePassword() {
     const pass = document.getElementById('password');
     pass.type = pass.type === 'password' ? 'text' : 'password';
